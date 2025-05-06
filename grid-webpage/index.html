@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clickable Grid</title>
+    <style>
+        #grid-container {
+            display: grid;
+            border: 1px solid black;
+        }
+        .grid-cell {
+            border: 1px solid lightgray;
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            display: flex; /* For centering the point */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            font-size: 0.8em; /* Adjust as needed */
+        }
+        .point {
+            background-color: red;
+            border-radius: 50%; /* Make it circular */
+            width: 10px; /* Adjust size as needed */
+            height: 10px; /* Adjust size as needed */
+        }
+        #point-info {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="grid-container">
+        </div>
+    <div id="point-info">Click on the grid to add a point.</div>
+
+    <script>
+        const gridContainer = document.getElementById('grid-container');
+        const pointInfo = document.getElementById('point-info');
+        const gridSize = 20; // Define the number of rows and columns
+        let currentPoint = null; // Keep track of the currently placed point
+
+        // Function to create the grid
+        function createGrid() {
+            gridContainer.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+            gridContainer.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
+
+            for (let i = 0; i < gridSize * gridSize; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('grid-cell');
+                cell.dataset.row = Math.floor(i / gridSize); // Store row index
+                cell.dataset.col = i % gridSize;        // Store column index
+                cell.addEventListener('click', handleGridClick);
+                gridContainer.appendChild(cell);
+            }
+        }
+
+        // Function to handle clicks on the grid
+        function handleGridClick(event) {
+            const clickedCell = event.target;
+            const row = parseInt(clickedCell.dataset.row);
+            const col = parseInt(clickedCell.dataset.col);
+
+            // Remove the previous point if it exists
+            if (currentPoint) {
+                currentPoint.remove();
+            }
+
+            // Create a new point element
+            const point = document.createElement('div');
+            point.classList.add('point');
+            clickedCell.appendChild(point);
+            currentPoint = point;
+
+            // Update the point information display
+            pointInfo.textContent = `Point placed at Row: ${row}, Column: ${col}`;
+        }
+
+        // Initialize the grid when the page loads
+        createGrid();
+    </script>
+</body>
+</html>
